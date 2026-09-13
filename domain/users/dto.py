@@ -1,16 +1,18 @@
+from pydantic import BaseModel, ConfigDict, EmailStr
 
-from pydantic import BaseModel
 
 class CreateUserDTO(BaseModel):
-    # TODO: опишите модель тела запроса для получения запроса на создание пользователя
-    pass
+    email: EmailStr
+    password: str
+
+
+class UpdateUserDTO(BaseModel):
+    email: EmailStr | None = None
+    password: str | None = None
 
 
 class UserDTO(BaseModel):
-    # TODO: опишите модель тела ответа с данными пользователя без пароля
-    pass
+    model_config = ConfigDict(from_attributes=True)
 
-
-class UserWithPasswordDTO(UserDTO):
-    # TODO: опишите модель тела ответа с данными пользователя с паролем
-    pass
+    id: int
+    email: EmailStr

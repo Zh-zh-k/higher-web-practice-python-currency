@@ -4,8 +4,16 @@ from fastapi import FastAPI
 from api.auth.router import router as auth_router
 from api.currency.router import router as currency_router
 from api.users.router import router as users_router
+from database import Base, engine
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def startup():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
 app.include_router(currency_router)
 app.include_router(users_router)
 app.include_router(auth_router)

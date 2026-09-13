@@ -1,4 +1,20 @@
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
 
-class User():
-    # TODO: описать модель таблицы данных пользователя
-    pass
+from database import Base
+
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(
+        String(255),
+        unique=True,
+        nullable=False,
+        index=True,
+    )
+    password_hash: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
