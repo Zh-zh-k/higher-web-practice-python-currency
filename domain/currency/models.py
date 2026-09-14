@@ -5,6 +5,10 @@ from sqlalchemy import (Date, Float, ForeignKey, Integer, String,
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database import Base
+from domain.currency.constants import (
+    CURRENCY_CODE_MAX_LENGTH,
+    CURRENCY_NAME_MAX_LENGTH,
+)
 
 
 class Currency(Base):
@@ -12,13 +16,13 @@ class Currency(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     code: Mapped[str] = mapped_column(
-        String(3),
+        String(CURRENCY_CODE_MAX_LENGTH),
         unique=True,
         nullable=False,
         index=True,
     )
     name: Mapped[str] = mapped_column(
-        String(255),
+        String(CURRENCY_NAME_MAX_LENGTH),
         nullable=False,
     )
 
@@ -26,6 +30,13 @@ class Currency(Base):
         back_populates="currency",
         cascade="all, delete-orphan",
     )
+
+    def __repr__(self) -> str:
+        return (
+            f"Currency(id={self.id!r}, "
+            f"code={self.code!r}, "
+            f"name={self.name!r})"
+        )
 
 
 class ExchangeRate(Base):
@@ -67,3 +78,12 @@ class ExchangeRate(Base):
     currency: Mapped["Currency"] = relationship(
         back_populates="rates"
     )
+
+    def __repr__(self) -> str:
+        return (
+            f"ExchangeRate(id={self.id!r}, "
+            f"currency_id={self.currency_id!r}, "
+            f"value={self.value!r}, "
+            f"nominal={self.nominal!r}, "
+            f"date={self.date!r})"
+        )
